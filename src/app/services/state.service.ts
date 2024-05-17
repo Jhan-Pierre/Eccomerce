@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { Injectable, inject } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { environment } from '../../environments/environment';
 import { Observable } from 'rxjs';
@@ -9,19 +9,20 @@ import { State } from '../interfaces/state';
 })
 export class StateService {
 
-  private endpoint:string = environment.endPoint;
+  private readonly _http = inject(HttpClient);
 
-  private apiUrl:string = this.endpoint + "State/";
+  private readonly endpoint:string = environment.endPoint;
 
-  constructor(private http:HttpClient) { }
+  private readonly apiUrl:string = this.endpoint + "State/";
+
   getList():Observable<State[]> { 
-    return this.http.get<State[]>(`${this.apiUrl}List`);
+    return this._http.get<State[]>(`${this.apiUrl}List`);
   }
 
   add(request:State):Observable<State> {
-    return this.http.post<State>(`${this.apiUrl}Add`, request);
+    return this._http.post<State>(`${this.apiUrl}Add`, request);
   }
   delete(idState:number):Observable<void> {
-    return this.http.delete<void>(`${this.apiUrl}Delete/${idState}`);
+    return this._http.delete<void>(`${this.apiUrl}Delete/${idState}`);
   }
 }
