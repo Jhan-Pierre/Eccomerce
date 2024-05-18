@@ -1,24 +1,26 @@
-import { Component } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { StateService } from '../../services/state.service';
 import { State } from '../../interfaces/state';
 import { HttpClientModule } from '@angular/common/http';
-import { CommonModule } from '@angular/common';
+import { AsyncPipe, CommonModule } from '@angular/common';
 import { RouterLink, RouterOutlet } from '@angular/router';
 
 @Component({
   selector: 'app-state',
   standalone: true,
   imports: [
-    ReactiveFormsModule,
-    HttpClientModule,
+    AsyncPipe,
     [CommonModule, RouterOutlet, RouterLink]
   ],
   templateUrl: './state.component.html',
   styleUrl: './state.component.css'
 })
 export class StateComponent {
-  formState: FormGroup;
+  stateSvc = inject(StateService);
+  states$ = this.stateSvc.getList();
+
+  /* formState: FormGroup;
   states$ = this.stateSvc.getList();
 
   constructor(
@@ -56,6 +58,6 @@ export class StateComponent {
       },
       error: (e) => console.error(e)
     });
-  }
+  } */
 
 }
