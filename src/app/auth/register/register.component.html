@@ -6,10 +6,17 @@
         </a>
         <div class="w-full bg-white rounded-lg shadow dark:border md:mt-0 sm:max-w-xl xl:p-0 dark:bg-gray-800 dark:border-gray-700">
             <div class="p-6 space-y-4 md:space-y-6 sm:p-8">
+                @for (error of errors; track error) {
+                    <div>
+                        <span class="text-red-500 text-sm">
+                            {{ error }}
+                        </span>
+                    </div>
+                }
                 <h1 class="text-xl font-bold leading-tight tracking-tight text-gray-900 md:text-2xl dark:text-white">
                     Create an account
                 </h1>
-                <form [formGroup]="registerForm" (ngSubmit)="register" class="grid gap-4 sm:grid-cols-2 sm:gap-6">
+                <form [formGroup]="registerForm" (ngSubmit)="register()" class="grid gap-4 sm:grid-cols-2 sm:gap-6">
                     <div class="w-full">
                         <label for="email" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Your email</label>
                         <input formControlName="email" type="email" name="email" id="email" class="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="name@company.com" >
@@ -22,7 +29,7 @@
                         <input formControlName="fullName" type="text" name="name" id="name" class="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="e.g. Luis Lopez" >
                         <span *ngIf="registerForm.get('fullName')?.hasError('required') && registerForm.get('fullName')?.touched" class="font-medium text-xs text-red-600 dark:text-red-400">
                             Full name is required.
-                          </span>
+                        </span>
                     </div>
                     <div class="w-full">
                         <label for="password" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Password</label>
@@ -35,27 +42,13 @@
                             las contraseñas no coinciden</span>
                     </div>
                     <div class="w-full">
-                        <button id="dropdownCheckboxButton" data-dropdown-toggle="dropdownDefaultCheckbox" class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center inline-flex items-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800" type="button">
-                            Selecionar Roles
-                            <svg class="w-2.5 h-2.5 ms-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 10 6">
-                              <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m1 1 4 4 4-4"/>
-                            </svg>
-                          </button>
-                          
-                          <!-- Dropdown menu -->
-                          <div id="dropdownDefaultCheckbox" class="z-10 hidden w-48 bg-white divide-y divide-gray-100 rounded-lg shadow dark:bg-gray-700 dark:divide-gray-600">
-                            <ul class="p-3 space-y-3 text-sm text-gray-700 dark:text-gray-200" aria-labelledby="dropdownCheckboxButton">
-                              @for (rol of roles$ | async; track rol) {
-                                <li>
-                                  <div class="flex items-center">
-                                    <input id="checkbox-{{rol.id}}" type="checkbox" value="{{rol.id}}"  class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-700 dark:focus:ring-offset-gray-700 focus:ring-2 dark:bg-gray-600 dark:border-gray-500">
-                                    <label for="checkbox-{{rol.id}}" class="ms-2 text-sm font-medium text-gray-900 dark:text-gray-300">{{ rol.name}}</label>
-                                  </div>
-                                </li>
-                              }
-                            </ul>
-                          </div>
-                          
+                        <label for="roles" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Roles</label>
+                        <select formControlName="roles" multiple id="roles" class="bg-gray-50 border border-gray-300 text-gray-900 mb-6 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
+                            <option selected>Seleciona un rol</option>
+                            @for (rol of roles$ | async; track rol) {
+                                <option value="{{rol.name}}">{{rol.name}}</option>
+                            }
+                        </select>    
                     </div>
                     <div class="flex items-start sm:col-span-2">
                         <div class="flex items-center h-5">
@@ -69,7 +62,7 @@
                     <p class="text-sm font-light text-gray-500 dark:text-gray-400">
                         Already have an account? <a routerLink="/login" class="font-medium text-primary-600 hover:underline dark:text-primary-500">Login here</a>
                     </p>
-                </form>
+                </form>   
             </div>
         </div>
     </div>

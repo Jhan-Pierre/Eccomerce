@@ -5,6 +5,9 @@ import { Role } from '../../interfaces/role';
 import { Observable } from 'rxjs';
 import { RoleService } from '../../services/role.service';
 import { AsyncPipe, CommonModule } from '@angular/common';
+import { AuthService } from '../../services/auth.service';
+import { HttpErrorResponse } from '@angular/common/http';
+import { ValidationError } from '../../interfaces/validation-error';
 
 @Component({
   selector: 'app-register',
@@ -22,14 +25,40 @@ export class RegisterComponent implements OnInit {
   fb = inject(FormBuilder);
 
   roleService = inject(RoleService);
+  authService = inject(AuthService);
+
   roles$!:Observable<Role[]>;
 
   registerForm!: FormGroup;
-  selectedRoles: number[] = [];
+
   router = inject(Router);
 
-  register(){
+  errors!: ValidationError[];
 
+  register() {
+    if (this.registerForm.invalid) {
+      console.log("Formulario invalido");
+      return;
+    }
+
+    const formData = this.registerForm.value;
+
+    this.authService.register(formData).subscribe({
+      next: (response) => {
+        console.log(response);
+        // Redirige a la página de inicio de sesión después de un registro exitoso
+        this.router.navigate(['/login']);
+      },
+      error: (error: HttpErrorResponse) => {
+        if (error.status === 400) {
+          this.errors = error.error;
+          console.log("Error de validacion");
+        }
+      },
+      complete: () => {
+        console.log("Completado");
+      }
+    });
   }
 
   ngOnInit(): void {
@@ -44,22 +73,6 @@ export class RegisterComponent implements OnInit {
     });
     this.roles$ = this.roleService.getRoles();
   }
-
-  /* onRoleChange(event: Event) {
-    const checkbox = event.target as HTMLInputElement;
-    const value = parseInt(checkbox.value, 10);
-
-    if (checkbox.checked) {
-      this.selectedRoles.push(value);
-    } else {
-      const index = this.selectedRoles.indexOf(value);
-      if (index > -1) {
-        this.selectedRoles.splice(index, 1);
-      }
-    }
-
-    this.registerForm.patchValue({ roles: this.selectedRoles });
-  } */
 
   private passwordMatchValidator(control: AbstractControl): { [key: string]: boolean } | null {
     const password = control.get('password')?.value;
