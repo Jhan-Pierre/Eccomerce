@@ -6,6 +6,7 @@ import { AuthResponse } from '../interfaces/auth-response';
 import { HttpClient } from '@angular/common/http';
 import { jwtDecode } from 'jwt-decode';
 import { RegisterRequest } from '../interfaces/register-request';
+import { UserDetail } from '../interfaces/user-detail';
 
 @Injectable({
   providedIn: 'root'
@@ -46,8 +47,9 @@ export class AuthService {
     return !this.isTokenExpired();
   }
 
-  private getToken = ():string|null => localStorage.getItem(this.tokenKey) || '';
-
+  getDetail=():Observable<UserDetail> => this.http.get<UserDetail>(`${this.apiUrl}detail`);
+  
+  getToken = ():string|null => localStorage.getItem(this.tokenKey) || '';
 
   private isTokenExpired() {
     // Obtiene el token almacenado utilizando el método getToken
@@ -68,7 +70,6 @@ export class AuthService {
     // Retorna el estado de expiración del token (true si ha expirado, false en caso contrario)
     return isTokenExpired;
   }
-
 
   logout=():void =>{
     localStorage.removeItem(this.tokenKey);

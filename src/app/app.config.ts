@@ -4,10 +4,12 @@ import { provideRouter, withComponentInputBinding } from '@angular/router';
 import { routes } from './app.routes';
 import { provideHttpClient, withFetch, withInterceptors } from '@angular/common/http';
 import { ErrorResponseInterceptor } from './shared/error-response.interceptor';
+import { tokenInterceptor } from './shared/token.interceptor';
 
 export const appConfig: ApplicationConfig = {
   providers: [
     provideRouter(routes, withComponentInputBinding()),
     provideHttpClient(withFetch(), 
-    withInterceptors([ErrorResponseInterceptor]))]
+    withInterceptors([ErrorResponseInterceptor, tokenInterceptor])
+  )]
 };
