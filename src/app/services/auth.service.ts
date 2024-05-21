@@ -47,8 +47,24 @@ export class AuthService {
     return !this.isTokenExpired();
   }
 
+  //Metodo para obtener la informacion de todos los usuarios
+  getAll= ():Observable<UserDetail[]> => this.http.get<UserDetail[]>(`${this.apiUrl}`);
+
+
+  //Metodo para obtener la informacion de un usuario
   getDetail=():Observable<UserDetail> => this.http.get<UserDetail>(`${this.apiUrl}detail`);
   
+  //recuperar los roles
+  getRoles = (): string | null => {
+    const token = this.getToken();
+    if (!token) return null;
+
+    const decodedToken:any = jwtDecode(token);
+    return decodedToken.role || null;
+
+  }
+
+  //Recuperar el token alamacenado en el local storage
   getToken = ():string|null => localStorage.getItem(this.tokenKey) || '';
 
   private isTokenExpired() {
