@@ -19,19 +19,3 @@ export class UsersComponent {
 
   users$ = this.authService.getAll();
 }
-
-@Directive({
-  selector: '[appDropdownToggle]'
-})
-export class DropdownToggleDirective {
-  @Input() appDropdownToggle!: string;
-
-  constructor(private el: ElementRef) {}
-
-  @HostListener('click') toggleOpen() {
-    const dropdown = document.getElementById(this.appDropdownToggle);
-    if (dropdown) {
-      dropdown.classList.toggle('hidden');
-    }
-  }
-}
